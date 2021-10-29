@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# In[12]:
 
 
 from __future__ import print_function
@@ -14,6 +15,9 @@ import json
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+
+
+# In[13]:
 
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
@@ -39,8 +43,13 @@ if not creds or not creds.valid:
     with open('token.pickle', 'wb') as token:
         pickle.dump(creds, token)
         
-service = build('calendar', 'v3', credentials=creds)
 
+
+# In[14]:
+
+
+
+service = build('calendar', 'v3', credentials=creds)
 
 #今日の一日のスケジュールを取得
 def TodaysSchedule():
@@ -77,20 +86,25 @@ def TodaysSchedule():
         #print(date,start_time+'-'+end_time, event['summary'])
     return today_events
 
-#LINE APIリクエスト
+
+# In[15]:
+
+
 file = open('info.json','r')
 info = json.load(file)
 CHANNEL_ACCESS_TOKEN = info['CHANNEL_ACCESS_TOKEN']
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 
 
-#LINEにチャットを送る
+# In[17]:
+
+
 def main():
     USER_ID = info['USER_ID']
     messages = TextSendMessage(text="おはようございます!")
     line_bot_api.push_message(USER_ID,messages=messages)
     
-    today_events = []
+    today_events = TodaysSchedule()
     if not today_events:
         messages = TextSendMessage(text="今日は特に予定はございません!\n自由な1日をお過ごしください。")
         line_bot_api.push_message(USER_ID,messages=messages)
@@ -107,6 +121,7 @@ if __name__ == "__main__":
     main()
 
 
+# In[ ]:
 
 
 
